@@ -1,0 +1,10 @@
+line-bot-sdk
+Flask
+matplotlib
+numpy
+requests
+pandas
+gunicorn
+beautifulsoup4
+markdown
+httpretty
