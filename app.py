@@ -9,7 +9,6 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage
 )
 import os
-import stop_loss_calculator
 
 
 app = Flask(__name__)
