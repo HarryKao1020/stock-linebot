@@ -30,7 +30,8 @@ handler = WebhookHandler(CHANNEL_SECRET)
 
 # 自己的userId / 未來開放就要拿掉
 user_id = 'U2032ae75254e026706d91546f58b9af1'
-line_bot_api.push_message(user_id, TextSendMessage(text='你好，我是股市小幫手'))
+line_bot_api.push_message(user_id, TextSendMessage(
+    text="Hello,I'm stock helper robot !"))
 
 
 @app.route("/callback", methods=['POST'])
@@ -58,10 +59,10 @@ def handle_message(event):
     message = event.message.text
 
     # 設定停損點
-    if message == "哈囉":
+    if message == "Hi":
         replyMessage = "hello"
     else:
-        replyMessage = "查詢不到"
+        replyMessage = "Can't Not Found!"
 
     # 當收到文字訊息時回覆replyMessage
     line_bot_api.reply_message(
