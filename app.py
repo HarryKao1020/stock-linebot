@@ -15,8 +15,10 @@ from linebot.models import *
 app = Flask(__name__)
 
 
-LINE_CHANNEL_ACCESS_TOKEN = os.getenv('CHANNEL_ACCESS_TOKEN')
-LINE_CHANNEL_SECRET = os.getenv('CHANNEL_SECRET')
+# LINE_CHANNEL_ACCESS_TOKEN = os.getenv('CHANNEL_ACCESS_TOKEN')
+# LINE_CHANNEL_SECRET = os.getenv('CHANNEL_SECRET')
+LINE_CHANNEL_ACCESS_TOKEN = "04279870980e7421fbf1b27cc03165c2"
+LINE_CHANNEL_SECRET = "gIS4eSAOyETZv18tiyNcT4ZZ6274L9UuhLjSowpDjuqYf4dFCNB37+saXJfI1FSr85uiKqqrhteAxVCD3Yjalx/4zC3rshDGfm1/xZXIZmf4pFY2HYnRLs3LqbNiJAmBXAIOwCqSEZTqqnzNa8mfkwdB04t89/1O/w1cDnyilFU="
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 # 監聽所有來自 /callback 的 Post Request
@@ -34,7 +36,7 @@ def callback():
         handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
-    return 'OK'
+    return 'OK', 200
 
 
 # 處理訊息
