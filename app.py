@@ -44,7 +44,7 @@ def push_message(user_id, message):
 
 
 try:
-    push_message(user_id, "你好，我是股市小幫手！")
+    push_message(user_id, "Hi,I'm stock helper")
 except Exception as e:
     print(f"Error pushing message: {e}")
 
