@@ -4,6 +4,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import os
 import requests
+import json
 
 app = Flask(__name__)
 
@@ -39,12 +40,13 @@ def push_message(user_id, message):
             }
         ]
     }
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers,
+                             data=json.dumps(data).encode('utf-8'))
     return response
 
 
 try:
-    push_message(user_id, "Hi,I'm stock helper")
+    push_message(user_id, "你好，我是股市小幫手！")
 except Exception as e:
     print(f"Error pushing message: {e}")
 
