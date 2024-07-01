@@ -3,6 +3,7 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import os
+import requests
 
 app = Flask(__name__)
 
@@ -21,9 +22,29 @@ handler = WebhookHandler(CHANNEL_SECRET)
 
 # 自己的userId / 未來開放就要拿掉
 user_id = 'U2032ae75254e026706d91546f58b9af1'
+
+
+def push_message(user_id, message):
+    url = 'https://api.line.me/v2/bot/message/push'
+    headers = {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': f'Bearer {CHANNEL_ACCESS_TOKEN}'
+    }
+    data = {
+        "to": user_id,
+        "messages": [
+            {
+                "type": "text",
+                "text": message
+            }
+        ]
+    }
+    response = requests.post(url, headers=headers, json=data)
+    return response
+
+
 try:
-    line_bot_api.push_message(user_id, TextSendMessage(
-        text="Hello, I'm stock helper robot!"))
+    push_message(user_id, "你好，我是股市小幫手！")
 except Exception as e:
     print(f"Error pushing message: {e}")
 
