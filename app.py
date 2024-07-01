@@ -1,19 +1,10 @@
 from flask import Flask, request, abort
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    InvalidSignatureError
-)
-from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage
-)
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import os
 
-
 app = Flask(__name__)
-# 設定成dev模式
-# app.config['FLASK_ENV'] = 'development'
 
 # 讀取環境變數中的敏感資訊
 CHANNEL_ACCESS_TOKEN = os.getenv('CHANNEL_ACCESS_TOKEN')
@@ -30,8 +21,11 @@ handler = WebhookHandler(CHANNEL_SECRET)
 
 # 自己的userId / 未來開放就要拿掉
 user_id = 'U2032ae75254e026706d91546f58b9af1'
-line_bot_api.push_message(user_id, TextSendMessage(
-    text="Hello,I'm stock helper robot !"))
+try:
+    line_bot_api.push_message(user_id, TextSendMessage(
+        text="Hello, I'm stock helper robot!"))
+except Exception as e:
+    print(f"Error pushing message: {e}")
 
 
 @app.route("/callback", methods=['POST'])
@@ -55,7 +49,6 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-
     message = event.message.text
 
     # 設定停損點
