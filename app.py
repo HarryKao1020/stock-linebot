@@ -85,6 +85,22 @@ def callback():
             )
 
     return 'OK'
+    
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    message = event.message.text
+
+    # 設定停損點
+    if message == "Hi":
+        replyMessage = "hello"
+    else:
+        replyMessage = "Can't Not Found!"
+
+    # 當收到文字訊息時回覆replyMessage
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=replyMessage)
+    )
 
 
 if __name__ == "__main__":
