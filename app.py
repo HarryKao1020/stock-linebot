@@ -34,14 +34,13 @@ def callback():
         handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
-    return 'OK'
+    return 'OK', 200, {'Content-Type': 'text/plain; charset=utf-8'}
 
 
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     msg = str(event.message.text)
-
     line_bot_api.reply_message(event.reply_token, TextSendMessage(msg))
 
 
@@ -56,7 +55,7 @@ def welcome(event):
     gid = event.source.group_id
     profile = line_bot_api.get_group_member_profile(gid, uid)
     name = profile.display_name
-    message = TextSendMessage(text=f'{name}歡迎加入')
+    message = TextSendMessage(text=f'{name}Welcome!')
     line_bot_api.reply_message(event.reply_token, message)
 
 
