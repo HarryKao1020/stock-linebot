@@ -77,7 +77,7 @@ def callback():
             continue
 
         # Print the user's message
-        print(f'Received message: {event.message.text}')
+        logger.info(f'Received message: {event.message.text}')
         with ApiClient(configuration) as api_client:
             line_bot_api = MessagingApi(api_client)
             line_bot_api.reply_message_with_http_info(
