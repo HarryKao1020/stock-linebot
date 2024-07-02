@@ -39,8 +39,8 @@ from linebot.v3.messaging import (
 app = Flask(__name__)
 
 # get channel_secret and channel_access_token from your environment variable
-channel_secret = os.getenv('CHANNEL_SECRET', None)
-channel_access_token = os.getenv('CHANNEL_ACCESS_TOKEN', None)
+channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
+channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
     sys.exit(1)
@@ -85,29 +85,13 @@ def callback():
             )
 
     return 'OK'
-    
-@handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    message = event.message.text
-
-    # 設定停損點
-    if message == "Hi":
-        replyMessage = "hello"
-    else:
-        replyMessage = "Can't Not Found!"
-
-    # 當收到文字訊息時回覆replyMessage
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=replyMessage)
-    )
 
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
         usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
     )
-    arg_parser.add_argument('-p', '--port', type=int, default=8000, help='port')
+    arg_parser.add_argument('-p', '--port', type=int, default=5000, help='port')
     arg_parser.add_argument('-d', '--debug', default=False, help='debug')
     options = arg_parser.parse_args()
 
