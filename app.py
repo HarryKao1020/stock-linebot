@@ -92,11 +92,13 @@ def message_text(event):
         print("line_bot_api:",line_bot_api)
         messages = [TextMessage(text=event.message.text)]
         print("messages:", messages)
+        replyMessage = event.message.text
+        print("replyMessage:",)
         try:
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[TextMessage(text=event.message.text)]
+                    messages=replyMessage
                 )
             )
         except Exception as e:
