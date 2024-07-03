@@ -41,6 +41,7 @@ app = Flask(__name__)
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('CHANNEL_SECRET', None)
 channel_access_token = os.getenv('CHANNEL_ACCESS_TOKEN', None)
+
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
     sys.exit(1)
@@ -54,9 +55,11 @@ configuration = Configuration(
     access_token=channel_access_token
 )
 
+print("HiHiHi")
 
 @app.route("/callback", methods=['POST'])
 def callback():
+    print("HiHiHi")
     signature = request.headers['X-Line-Signature']
 
     # get request body as text
