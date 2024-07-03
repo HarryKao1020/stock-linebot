@@ -80,11 +80,11 @@ def message_text(event):
     with ApiClient(configuration) as api_client:
         print("start reply message")
         line_bot_api = MessagingApi(api_client)
+        messages = [TextMessage(text=event.message.text)]
         line_bot_api.reply_message_with_http_info(
             ReplyMessageRequest(
                 reply_token=event.reply_token,
                 messages=[TextMessage(text=event.message.text)]
-                print("messages:",messages)
             )
         )
 
