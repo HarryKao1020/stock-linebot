@@ -82,15 +82,15 @@ def callback():
             continue
 
         try:
-        with ApiClient(configuration) as api_client:
-            print("Start Reply Message")
-            line_bot_api = MessagingApi(api_client)
-            line_bot_api.reply_message_with_http_info(
-                ReplyMessageRequest(
-                    reply_token=event.reply_token,
-                    messages=[TextMessage(text=event.message.text)]
+            with ApiClient(configuration) as api_client:
+                print("Start Reply Message")
+                line_bot_api = MessagingApi(api_client)
+                line_bot_api.reply_message_with_http_info(
+                    ReplyMessageRequest(
+                        reply_token=event.reply_token,
+                        messages=[TextMessage(text=event.message.text)]
+                    )
                 )
-            )
         except Exception as e:
             print("Error in replying message:" ,str(e))
 
