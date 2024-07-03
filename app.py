@@ -48,13 +48,19 @@ if channel_access_token is None:
     sys.exit(1)
 
 handler = WebhookHandler(channel_secret)
-
 configuration = Configuration(
-    access_token=channel_access_token,
-    default_headers={
-        'Content-Type': 'application/json; charset=utf-8'
-    }
+    access_token=channel_access_token
 )
+# Custom ApiClient to force utf-8 encoding
+class Utf8ApiClient(ApiClient):
+    def __init__(self, configuration):
+        super().__init__(configuration)
+        self.rest_client.pool_manager.connection_pool_kw['headers'] = {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+
+
+
 
 print("hahaha123")
 print("handler",handler)
@@ -80,7 +86,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessageContent)
 def message_text(event):
     print("start reply message")
-    with ApiClient(configuration) as api_client:
+    with Utf8ApiClient(configuration) as api_client:
         print("start reply message")
         line_bot_api = MessagingApi(api_client)
         messages = [TextMessage(text=event.message.text)]
