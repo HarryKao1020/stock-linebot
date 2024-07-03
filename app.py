@@ -62,11 +62,12 @@ def callback():
     # get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
-
+    print("Body:",body)
     # handle webhook body
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
+        print("call back Error hahaha")
         abort(400)
 
     return 'OK'
@@ -74,12 +75,15 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessageContent)
 def message_text(event):
+    print("Event:",event)
     with ApiClient(configuration) as api_client:
+        print("start reply message")
         line_bot_api = MessagingApi(api_client)
         line_bot_api.reply_message_with_http_info(
             ReplyMessageRequest(
                 reply_token=event.reply_token,
                 messages=[TextMessage(text=event.message.text)]
+                print("messages:",messages)
             )
         )
 
