@@ -76,7 +76,9 @@ def callback():
     print("Events:",events)
     # if event is MessageEvent and message is TextMessage, then echo text
     for event in events:
-        print("event",event)
+        print(f"Processing event: {event}")
+        print(f"Event type: {type(event)}")
+        print(f"Event class: {event.__class__}")
         if not isinstance(event, MessageEvent):
             print(f"Skipping non-MessageEvent: {event}")
             continue
