@@ -95,10 +95,10 @@ def message_text(event):
         messages = [TextMessage(text=event.message.text.encode("utf-8").decode("utf-8"))]
         print("messages:", messages)
         try:
-            line_bot_api.reply_message_with_http_info(
+            line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=messages
+                    messages=[TextMessage(text='Hello user')]
                 )
             )
         except Exception as e:
