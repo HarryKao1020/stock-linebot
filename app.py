@@ -60,8 +60,6 @@ configuration = Configuration(
 #         }
 
 
-
-
 print("hahaha123")
 print("handler",handler)
 @app.route("/callback", methods=['POST'])
@@ -86,19 +84,21 @@ def callback():
 @handler.add(MessageEvent, message=TextMessageContent)
 def message_text(event):
     print("event:",event)
+    user_message = event.message.text
+    print("event message",user_message)
+    
+
     with ApiClient(configuration) as api_client:
         print("start reply message")
         line_bot_api = MessagingApi(api_client)
         print("line_bot_api:",line_bot_api)
         messages = [TextMessage(text=event.message.text)]
         print("messages:", messages)
-        replyMessage = event.message.text
-        print("replyMessage:",)
         try:
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=replyMessage
+                    messages=user_message
                 )
             )
         except Exception as e:
