@@ -51,6 +51,9 @@ handler = WebhookHandler(channel_secret)
 
 configuration = Configuration(
     access_token=channel_access_token
+    default_headers={
+        'Content-Type': 'application/json; charset=utf-8'
+    }
 )
 
 print("hahaha123")
