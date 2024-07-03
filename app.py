@@ -18,7 +18,7 @@ from argparse import ArgumentParser
 
 from flask import Flask, request, abort
 from linebot.v3 import (
-     WebhookHandler
+    WebhookHandler
 )
 from linebot.v3.exceptions import (
     InvalidSignatureError
@@ -77,18 +77,20 @@ def callback():
 @handler.add(MessageEvent, message=TextMessageContent)
 def message_text(event):
     print("start reply message")
-    line_bot_api = MessagingApi(api_client)
-    messages = [TextMessage(text=event.message.text)]
-    print("messages:", messages)
-    try:
-        line_bot_api.reply_message_with_http_info(
-            ReplyMessageRequest(
-                reply_token=event.reply_token,
-                messages=messages
+    with ApiClient(configuration) as api_client:
+        print("start reply message")
+        line_bot_api = MessagingApi(api_client)
+        messages = [TextMessage(text=event.message.text)]
+        print("messages:", messages)
+        try:
+            line_bot_api.reply_message_with_http_info(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=messages
+                )
             )
-        )
-    except Exception as e:
-        print(f"Error in reply_message_with_http_info: {e}")
+        except Exception as e:
+            print(f"Error in reply_message_with_http_info: {e}")
 
 
 if __name__ == "__main__":
