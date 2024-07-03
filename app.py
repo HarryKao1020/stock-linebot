@@ -59,19 +59,22 @@ print("HiHiHi123123")
 
 @app.route("/callback", methods=['POST'])
 def callback():
-    print("HiHiHi")
     signature = request.headers['X-Line-Signature']
 
+    print("signature:",signature)
+    print("get body start")
     # get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
-
+    print("body:",body)
     # parse webhook body
     try:
         events = parser.parse(body, signature)
     except InvalidSignatureError:
         abort(400)
-
+    
+    print("Events:",events)
+    print("Event:",event)
     # if event is MessageEvent and message is TextMessage, then echo text
     for event in events:
         if not isinstance(event, MessageEvent):
@@ -79,8 +82,7 @@ def callback():
         if not isinstance(event.message, TextMessageContent):
             continue
 
-        # Print the user's message
-        logger.info(f'Received message: {event.message.text}')
+        
         with ApiClient(configuration) as api_client:
             line_bot_api = MessagingApi(api_client)
             line_bot_api.reply_message_with_http_info(
