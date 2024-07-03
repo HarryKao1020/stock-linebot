@@ -138,13 +138,13 @@ def message_text(event):
         print("start reply message")
         line_bot_api = MessagingApi(api_client)
         print("line_bot_api:",line_bot_api)
-        messages = [TextMessage(text=event.message.text.encode("utf-8").decode("latin-1"))]
+        messages = [TextMessage(text=user_message.encode("utf-8"))]
         print("messages:", messages)
         try:
             line_bot_api.reply_message(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=[TextMessage(text='Hello user')]
+                    messages=messages
                 )
             )
         except Exception as e:
