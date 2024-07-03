@@ -85,8 +85,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessageContent)
 def message_text(event):
-    print("event",event)
-    print("message:",message)
+    print("event:",event)
     with ApiClient(configuration) as api_client:
         print("start reply message")
         line_bot_api = MessagingApi(api_client)
