@@ -74,7 +74,6 @@ def callback():
         abort(400)
     
     print("Events:",events)
-    print("Event:",event)
     # if event is MessageEvent and message is TextMessage, then echo text
     for event in events:
         if not isinstance(event, MessageEvent):
@@ -82,8 +81,9 @@ def callback():
         if not isinstance(event.message, TextMessageContent):
             continue
 
-        
+        try:
         with ApiClient(configuration) as api_client:
+            print("Start Reply Message")
             line_bot_api = MessagingApi(api_client)
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
@@ -91,6 +91,8 @@ def callback():
                     messages=[TextMessage(text=event.message.text)]
                 )
             )
+        except Exception as e:
+            print("Error in replying message:" ,str(e))
 
     return 'OK'
 
