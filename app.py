@@ -15,6 +15,8 @@
 import os
 import sys
 from argparse import ArgumentParser
+import logging
+
 
 from flask import Flask, request, abort
 from linebot.v3 import (
@@ -26,13 +28,65 @@ from linebot.v3.exceptions import (
 from linebot.v3.webhooks import (
     MessageEvent,
     TextMessageContent,
+    LocationMessageContent,
+    StickerMessageContent,
+    ImageMessageContent,
+    VideoMessageContent,
+    AudioMessageContent,
+    FileMessageContent,
+    UserSource,
+    RoomSource,
+    GroupSource,
+    FollowEvent,
+    UnfollowEvent,
+    JoinEvent,
+    LeaveEvent,
+    PostbackEvent,
+    BeaconEvent,
+    MemberJoinedEvent,
+    MemberLeftEvent,
 )
 from linebot.v3.messaging import (
     Configuration,
     ApiClient,
     MessagingApi,
+    MessagingApiBlob,
     ReplyMessageRequest,
-    TextMessage
+    PushMessageRequest,
+    MulticastRequest,
+    BroadcastRequest,
+    TextMessage,
+    ApiException,
+    LocationMessage,
+    StickerMessage,
+    ImageMessage,
+    TemplateMessage,
+    FlexMessage,
+    Emoji,
+    QuickReply,
+    QuickReplyItem,
+    ConfirmTemplate,
+    ButtonsTemplate,
+    CarouselTemplate,
+    CarouselColumn,
+    ImageCarouselTemplate,
+    ImageCarouselColumn,
+    FlexBubble,
+    FlexImage,
+    FlexBox,
+    FlexText,
+    FlexIcon,
+    FlexButton,
+    FlexSeparator,
+    FlexContainer,
+    MessageAction,
+    URIAction,
+    PostbackAction,
+    DatetimePickerAction,
+    CameraAction,
+    CameraRollAction,
+    LocationAction,
+    ErrorResponse
 )
 
 app = Flask(__name__)
@@ -51,17 +105,10 @@ handler = WebhookHandler(channel_secret)
 configuration = Configuration(
     access_token=channel_access_token
 )
-# Custom ApiClient to force utf-8 encoding
-# class Utf8ApiClient(ApiClient):
-#     def __init__(self, configuration):
-#         super().__init__(configuration)
-#         self.rest_client.pool_manager.connection_pool_kw['headers'] = {
-#             'Content-Type': 'application/json; charset=utf-8'
-#         }
 
 
-print("hahaha123")
-print("handler",handler)
+
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -70,7 +117,6 @@ def callback():
     # get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
-    print("Body:",body)
     # handle webhook body
     try:
         handler.handle(body, signature)
@@ -92,7 +138,7 @@ def message_text(event):
         print("start reply message")
         line_bot_api = MessagingApi(api_client)
         print("line_bot_api:",line_bot_api)
-        messages = [TextMessage(text=event.message.text.encode("utf-8").decode("utf-8"))]
+        messages = [TextMessage(text=event.message.text.encode("utf-8").decode("latin-1"))]
         print("messages:", messages)
         try:
             line_bot_api.reply_message(
