@@ -55,7 +55,7 @@ configuration = Configuration(
     access_token=channel_access_token
 )
 
-print("HiHiHi")
+print("HiHiHi123123")
 
 @app.route("/callback", methods=['POST'])
 def callback():
