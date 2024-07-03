@@ -92,7 +92,7 @@ def message_text(event):
         print("start reply message")
         line_bot_api = MessagingApi(api_client)
         print("line_bot_api:",line_bot_api)
-        messages = TextMessage(text=event.message.text.encode("utf-8").decode("utf-8"))
+        messages = [TextMessage(text=event.message.text.encode("utf-8").decode("utf-8"))]
         print("messages:", messages)
         try:
             line_bot_api.reply_message_with_http_info(
