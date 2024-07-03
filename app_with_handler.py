@@ -12,13 +12,14 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
+
 import os
 import sys
 from argparse import ArgumentParser
 
 from flask import Flask, request, abort
-from linebot.v3 import (
-     WebhookHandler
+from linebot import (
+    WebhookParser
 )
 from linebot.v3.exceptions import (
     InvalidSignatureError
@@ -40,6 +41,7 @@ app = Flask(__name__)
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('CHANNEL_SECRET', None)
 channel_access_token = os.getenv('CHANNEL_ACCESS_TOKEN', None)
+
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
     sys.exit(1)
@@ -47,48 +49,63 @@ if channel_access_token is None:
     print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
     sys.exit(1)
 
-handler = WebhookHandler(channel_secret)
+parser = WebhookParser(channel_secret)
 
 configuration = Configuration(
     access_token=channel_access_token
 )
 
+print("HiHiHi123123")
 
 @app.route("/callback", methods=['POST'])
 def callback():
-    # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
 
+    print("signature:",signature)
+    print("get body start")
     # get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
-
-    # handle webhook body
+    print("body:",body)
+    # parse webhook body
     try:
-        handler.handle(body, signature)
+        events = parser.parse(body, signature)
     except InvalidSignatureError:
         abort(400)
+    
+    print("Events:",events)
+    # if event is MessageEvent and message is TextMessage, then echo text
+    for event in events:
+        print(f"Processing event: {event}")
+        print(f"Event type: {type(event)}")
+        print(f"Event class: {event.__class__}")
+        if not isinstance(event, MessageEvent):
+            print(f"Skipping non-MessageEvent: {event}")
+            continue
+        if not isinstance(event.message, TextMessageContent):
+            print(f"Skipping non-TextMessageContent: {event.message}")
+            continue
 
-    return 'OK'
-
-
-@handler.add(MessageEvent, message=TextMessageContent)
-def message_text(event):
-    with ApiClient(configuration) as api_client:
-        line_bot_api = MessagingApi(api_client)
-        line_bot_api.reply_message_with_http_info(
-            ReplyMessageRequest(
-                reply_token=event.reply_token,
-                messages=[TextMessage(text=event.message.text)]
+        
+        print("Creating API client...")
+        with ApiClient(configuration) as api_client:
+            line_bot_api = MessagingApi(api_client)
+            print("Sending reply message...")
+            line_bot_api.reply_message_with_http_info(
+                ReplyMessageRequest(
+                    reply_token=event.reply_token,
+                    messages=[TextMessage(text=event.message.text)]
+                )
             )
-        )
+            print(f"Response status: {response[1].status}, response data: {response[0]}")
+    return 'OK'
 
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
         usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
     )
-    arg_parser.add_argument('-p', '--port', default=5000, help='port')
+    arg_parser.add_argument('-p', '--port', type=int, default=5000, help='port')
     arg_parser.add_argument('-d', '--debug', default=False, help='debug')
     options = arg_parser.parse_args()
 
