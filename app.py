@@ -53,7 +53,8 @@ configuration = Configuration(
     access_token=channel_access_token
 )
 
-
+print("hahaha123")
+print("handler",handler)
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
