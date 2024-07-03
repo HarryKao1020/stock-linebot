@@ -52,12 +52,12 @@ configuration = Configuration(
     access_token=channel_access_token
 )
 # Custom ApiClient to force utf-8 encoding
-class Utf8ApiClient(ApiClient):
-    def __init__(self, configuration):
-        super().__init__(configuration)
-        self.rest_client.pool_manager.connection_pool_kw['headers'] = {
-            'Content-Type': 'application/json; charset=utf-8'
-        }
+# class Utf8ApiClient(ApiClient):
+#     def __init__(self, configuration):
+#         super().__init__(configuration)
+#         self.rest_client.pool_manager.connection_pool_kw['headers'] = {
+#             'Content-Type': 'application/json; charset=utf-8'
+#         }
 
 
 
@@ -85,17 +85,19 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessageContent)
 def message_text(event):
-    print("start reply message")
-    with Utf8ApiClient(configuration) as api_client:
+    print("event",event)
+    print("message:",message)
+    with ApiClient(configuration) as api_client:
         print("start reply message")
         line_bot_api = MessagingApi(api_client)
+        print("line_bot_api:",line_bot_api)
         messages = [TextMessage(text=event.message.text)]
         print("messages:", messages)
         try:
             line_bot_api.reply_message_with_http_info(
                 ReplyMessageRequest(
                     reply_token=event.reply_token,
-                    messages=messages
+                    messages=[TextMessage(text=event.message.text)]
                 )
             )
         except Exception as e:
