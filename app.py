@@ -50,7 +50,7 @@ if channel_access_token is None:
 handler = WebhookHandler(channel_secret)
 
 configuration = Configuration(
-    access_token=channel_access_token
+    access_token=channel_access_token,
     default_headers={
         'Content-Type': 'application/json; charset=utf-8'
     }
