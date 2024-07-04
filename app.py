@@ -90,10 +90,10 @@ from linebot.v3.messaging import (
 )
 
 app = Flask(__name__)
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 #加載 .env 文件中的環境變數
-load_dotenv()
+# load_dotenv()
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('CHANNEL_SECRET', None)
 channel_access_token = os.getenv('CHANNEL_ACCESS_TOKEN', None)
