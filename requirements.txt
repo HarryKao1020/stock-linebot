@@ -1,6 +1,7 @@
 line-bot-sdk
 flask
 gunicorn
+dotenv
 matplotlib
 numpy
 requests
