@@ -90,10 +90,10 @@ from linebot.v3.messaging import (
 )
 
 app = Flask(__name__)
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
-# 加載 .env 文件中的環境變數
-# load_dotenv()
+#加載 .env 文件中的環境變數
+load_dotenv()
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('CHANNEL_SECRET', None)
 channel_access_token = os.getenv('CHANNEL_ACCESS_TOKEN', None)
@@ -156,7 +156,7 @@ if __name__ == "__main__":
     arg_parser = ArgumentParser(
         usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
     )
-    arg_parser.add_argument('-p', '--port', default=5000, help='port')
+    arg_parser.add_argument('-p', '--port', default=8000, help='port')
     arg_parser.add_argument('-d', '--debug', default=False, help='debug')
     options = arg_parser.parse_args()
 
