@@ -9,3 +9,5 @@
   - pip install flask
   - pip install line-bot-sdk
   - pip install gunicorn
+  - pip install python-dotenv
+  - pip install

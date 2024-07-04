@@ -88,12 +88,13 @@ from linebot.v3.messaging import (
     LocationAction,
     ErrorResponse
 )
-
+# import stop_loss_calculator
 app = Flask(__name__)
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 #加載 .env 文件中的環境變數
-# load_dotenv()
+load_dotenv()
+
 # get channel_secret and channel_access_token from your environment variable
 channel_secret = os.getenv('CHANNEL_SECRET', None)
 channel_access_token = os.getenv('CHANNEL_ACCESS_TOKEN', None)
@@ -136,11 +137,40 @@ def message_text(event):
     with ApiClient(configuration) as api_client:
         line_bot_api = MessagingApi(api_client)
 
-        if (user_message=="Hello"):
-            reply_message = "Fuck"
+        if user_message=="Hello":
+            replyMessage = "Fuck"
+        elif user_message.startswith('設定停損點'):
+            replyMessage="請輸入股票代碼及買進價格,Ex:2330/1000"
+        elif '/' in user_message:
+            stock_code, buy_price = user_message.split('/')
+            replyMessage = f"買進價格:{buy_price}"
+            # try:
+            #     buy_price = float(buy_price)
+            #     stop_loss_five_percent, stop_loss_four_percent = stop_loss_calculator.calculate_stop_loss(
+            #         buy_price)
+
+            #     ma_data = stop_loss_calculator.calculate_moving_averages(
+            #         stock_code, buy_price=buy_price)
+
+            #     current_5ma_diff = ma_data['5MA_diff'].iloc[-1]
+            #     current_10ma_diff = ma_data['10MA_diff'].iloc[-1]
+            #     current_20ma_diff = ma_data['20MA_diff'].iloc[-1]
+            #     current_60ma_diff = ma_data['60MA_diff'].iloc[-1]
+
+            #     message = f"停損價格（-5%）：{stop_loss_five_percent}\n"
+            #     message += f"停損價格（-4%）：{stop_loss_four_percent}\n"
+            #     message += f"5MA與買進價格的差距百分比：{current_5ma_diff:.2f}%\n"
+            #     message += f"10MA與買進價格的差距百分比：{current_10ma_diff:.2f}%\n"
+            #     message += f"20MA與買進價格的差距百分比：{current_20ma_diff:.2f}%\n"
+            #     message += f"60MA與買進價格的差距百分比：{current_60ma_diff:.2f}%"
+
+            #     replyMessage = message
+            # except ValueError:
+            #     replyMessage = "輸入格式錯誤，請輸入股票代碼及買進價格，例如：2330/670"
         else:
-            reply_message=user_message
-        messages = [TextMessage(text=reply_message)]
+            replyMessage = "查詢不到"
+
+        messages = [TextMessage(text=replyMessage)]
         try:
             line_bot_api.reply_message(
                 ReplyMessageRequest(
@@ -149,7 +179,7 @@ def message_text(event):
                 )
             )
         except Exception as e:
-            print(f"Error in reply_message_with_http_info: {e}")
+            print(f"Error in replyMessage_with_http_info: {e}")
 
 
 if __name__ == "__main__":
